@@ -3,44 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slide In On Scroll</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Slide In on Scroll</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      line-height: 2;
+    }
+
+    .site-wrap {
+      width: 80%;
+      margin: auto;
+      padding: 50px 0;
+    }
+
+    img {
+      width: 400px;
+      transition: all 0.5s;
+      opacity: 0;
+    }
+
+    .align-left {
+      float: left;
+      margin-right: 20px;
+      transform: translateX(-30%) scale(0.95);
+    }
+
+    .align-right {
+      float: right;
+      margin-left: 20px;
+      transform: translateX(30%) scale(0.95);
+    }
+
+    img.active {
+      opacity: 1;
+      transform: translateX(0%) scale(1);
+    }
+
+    p {
+      margin: 100px 0;
+    }
+  </style>
 </head>
+
 <body>
 
-  <div class="content">
-    <h1>Scroll Down</h1>
+  <div class="site-wrap">
+
+    <h1>Slide in on Scroll</h1>
+
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
+    </p>
+
+    <img class="slide-in align-left"
+      src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600">
+
+    <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
     </p>
 
-    <img
-      src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-      class="slide-in left"
-      alt="nature"
-    />
+    <img class="slide-in align-right"
+      src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600">
 
     <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
     </p>
 
-    <img
-      src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e"
-      class="slide-in right"
-      alt="mountain"
-    />
+    <img class="slide-in align-left"
+      src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=600">
 
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
+    </p>
+
+    <img class="slide-in align-right"
+      src="https://images.unsplash.com/photo-1511497584788-876760111969?w=600">
+
+    <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+    </p>
+
+    <img class="slide-in align-left"
+      src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600">
+
+    <p>
+      End of content
     </p>
 
   </div>
+
+  <script>
+    function debounce(func, wait = 20, immediate = true) {
+      let timeout;
+
+      return function() {
+        const context = this;
+        const args = arguments;
+
+        const later = function() {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+
+        const callNow = immediate && !timeout;
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+
+        if (callNow) func.apply(context, args);
+      };
+    }
+
+    const sliderImages = document.querySelectorAll('.slide-in');
+
+    function checkSlide() {
+      sliderImages.forEach(sliderImage => {
+
+        const slideInAt =
+          (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+
+        const imageBottom =
+          sliderImage.offsetTop + sliderImage.height;
+
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+
+        if (isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active');
+        }
+
+      });
+    }
+
+    window.addEventListener('scroll', debounce(checkSlide));
+  </script>
 
 </body>
 </html>
